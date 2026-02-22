@@ -16,6 +16,9 @@ public class BollingerBandsHub
         StandardDeviations = standardDeviations;
         Name = $"BB({lookbackPeriods},{standardDeviations})";
 
+        // Validate cache size for warmup requirements
+        ValidateCacheSize(lookbackPeriods, Name);
+
         Reinitialize();
     }
 
@@ -50,7 +53,7 @@ public static partial class BollingerBands
     /// </summary>
     /// <param name="chainProvider">The chain provider.</param>
     /// <param name="lookbackPeriods">Quantity of periods in lookback window.</param>
-    /// <param name="standardDeviations">The number of standard deviations.</param>
+    /// <param name="standardDeviations">Number of standard deviations.</param>
     /// <returns>A Bollinger Bands hub.</returns>
     /// <exception cref="ArgumentNullException">Thrown when the chain provider is null.</exception>
     /// <exception cref="ArgumentOutOfRangeException">Thrown when the parameters are invalid.</exception>

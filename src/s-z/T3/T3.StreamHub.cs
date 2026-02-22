@@ -31,6 +31,11 @@ public class T3Hub
 
         Name = $"T3({lookbackPeriods},{volumeFactor:F1})";
 
+        // Validate cache size for warmup requirements
+        // T3 requires 6 chained EMAs, each needing (N-1) periods to converge plus 100 extra.
+        int requiredWarmup = (6 * (lookbackPeriods - 1)) + 100;
+        ValidateCacheSize(requiredWarmup, Name);
+
         Reinitialize();
     }
 

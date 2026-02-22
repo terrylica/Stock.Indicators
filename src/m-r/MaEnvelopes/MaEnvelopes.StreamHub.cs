@@ -13,7 +13,7 @@ public static partial class MaEnvelopes
     /// Creates a Moving Average Envelopes streaming hub from a chain provider.
     /// </summary>
     /// <param name="chainProvider">The chain provider.</param>
-    /// <param name="lookbackPeriods">The number of periods for the moving average.</param>
+    /// <param name="lookbackPeriods">Number of periods for the moving average.</param>
     /// <param name="percentOffset">The percentage offset for the envelopes. Default is 2.5.</param>
     /// <param name="movingAverageType">The type of moving average to use. Default is SMA.</param>
     /// <returns>A Moving Average Envelopes hub.</returns>
@@ -124,6 +124,15 @@ public class MaEnvelopesHub
         offsetRatio = percentOffset / 100d;
         k = 2d / (lookbackPeriods + 1); // for EMA-based types
         Name = $"MAENV({lookbackPeriods},{percentOffset},{Enum.GetName(movingAverageType)})";
+
+        // Validate cache size for warmup requirements using type-specific multipliers:
+        // TEMA needs 3x, DEMA needs 2x, all other types need 1x
+        int warmupMultiplier = movingAverageType switch {
+            MaType.TEMA => 3,
+            MaType.DEMA => 2,
+            _ => 1
+        };
+        ValidateCacheSize(lookbackPeriods * warmupMultiplier, Name);
 
         Reinitialize();
     }

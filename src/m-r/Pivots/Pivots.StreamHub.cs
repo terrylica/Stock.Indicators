@@ -21,6 +21,10 @@ public class PivotsHub
         EndType = endType;
         Name = $"PIVOTS({leftSpan},{rightSpan},{maxTrendPeriods},{endType.ToString().ToUpperInvariant()})";
 
+        // Validate cache size for warmup requirements
+        int requiredWarmup = leftSpan + rightSpan + 1;
+        ValidateCacheSize(requiredWarmup, Name);
+
         Reinitialize();
     }
 
@@ -292,8 +296,8 @@ public static partial class Pivots
     /// Creates a Pivots streaming hub from a quote provider.
     /// </summary>
     /// <param name="quoteProvider">The quote provider.</param>
-    /// <param name="leftSpan">The number of periods to the left of the pivot point. Default is 2.</param>
-    /// <param name="rightSpan">The number of periods to the right of the pivot point. Default is 2.</param>
+    /// <param name="leftSpan">Number of periods to the left of the pivot point. Default is 2.</param>
+    /// <param name="rightSpan">Number of periods to the right of the pivot point. Default is 2.</param>
     /// <param name="maxTrendPeriods">The maximum number of periods for trend calculation. Default is 20.</param>
     /// <param name="endType">The type of end point for the pivot calculation. Default is <see cref="EndType.HighLow"/>.</param>
     /// <returns>An instance of <see cref="PivotsHub"/>.</returns>

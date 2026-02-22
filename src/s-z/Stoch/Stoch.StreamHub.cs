@@ -56,6 +56,12 @@ public class StochHub
         // Initialize buffer for raw K values (needed for SMA smoothing)
         _rawKBuffer = new Queue<double>(smoothPeriods);
 
+        // Validate cache size for warmup requirements
+        // Signal SMA reads Cache[p].Oscillator for p = (i - SignalPeriods + 1) to (i - 1);
+        // cache must retain at least Max(lookbackPeriods, signalPeriods, smoothPeriods) items.
+        int requiredWarmup = Math.Max(Math.Max(lookbackPeriods, signalPeriods), smoothPeriods);
+        ValidateCacheSize(requiredWarmup, Name);
+
         Reinitialize();
     }
 

@@ -26,6 +26,12 @@ public class RocWbHub
         rocEmaInitBuffer = new Queue<double>(emaPeriods);
         Name = $"ROCWB({lookbackPeriods},{emaPeriods},{stdDevPeriods})";
 
+        // Validate cache size for warmup requirements
+        // RocWb needs lookbackPeriods items for the first ROC value, then Max(emaPeriods, stdDevPeriods)
+        // more items to fill the EMA/StdDev buffers — total item count, not a zero-based index.
+        int requiredWarmup = lookbackPeriods + Math.Max(emaPeriods, stdDevPeriods);
+        ValidateCacheSize(requiredWarmup, Name);
+
         Reinitialize();
     }
 

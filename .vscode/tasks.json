@@ -98,7 +98,7 @@
       "label": "Setup: Dev tools",
       "detail": "Complete one-time environment setup (global tools and packages)",
       "type": "shell",
-      "command": "bash .devcontainer/startup.sh",
+      "command": "bash .devcontainer/post-create.sh",
       "problemMatcher": [
         "$msCompile",
         "$eslint-compact"
@@ -109,6 +109,7 @@
       "detail": "Pull latest, clean, rebuild non-incremental, fix all, and test",
       "group": "build",
       "dependsOn": [
+        "Setup: Dev tools",
         "Git: pull",
         "Clean: .NET Solution (dotnet clean)",
         "Build: .NET Solution (not incremental)",
@@ -414,10 +415,14 @@
       "problemMatcher": "$msCompile"
     },
     {
-      "label": "Test: All tests",
-      "detail": "Run all tests including integration tests",
-      "type": "shell",
-      "command": "dotnet test --no-restore --nologo",
+      "label": "Test: All",
+      "detail": "Run all unit, regression, and integration tests (excluding performance or website tests)",
+      "dependsOn": [
+        "Test: Unit tests",
+        "Test: Regression tests",
+        "Test: Integration",
+      ],
+      "dependsOrder": "sequence",
       "group": "test",
       "problemMatcher": "$msCompile"
     },
@@ -492,6 +497,46 @@
       },
       "dependsOn": "Install: Chrome for Puppeteer",
       "dependsOrder": "sequence"
+    },
+    {
+      "label": "Review: CodeRabbit CLI (plain)",
+      "detail": "Perform a full code review with CodeRabbit CLI in plain text response mode",
+      "type": "shell",
+      "command": "coderabbit",
+      "args": [
+        "--plain"
+      ]
+    },
+    {
+      "label": "Review: CodeRabbit CLI (prompt-only)",
+      "detail": "Perform a full code review with CodeRabbit CLI in prompt-only response mode",
+      "type": "shell",
+      "command": "coderabbit",
+      "args": [
+        "--prompt-only"
+      ]
+    },
+    {
+      "label": "Review: CodeRabbit CLI (uncommitted, plain)",
+      "detail": "Perform a code review on uncommitted with CodeRabbit CLI in plain text response mode",
+      "type": "shell",
+      "command": "coderabbit",
+      "args": [
+        "--plain",
+        "--type",
+        "uncommitted"
+      ]
+    },
+    {
+      "label": "Review: CodeRabbit CLI (uncommitted, prompt-only)",
+      "detail": "Perform a code review on uncommitted with CodeRabbit CLI in prompt-only response mode",
+      "type": "shell",
+      "command": "coderabbit",
+      "args": [
+        "--prompt-only",
+        "--type",
+        "uncommitted"
+      ]
     },
     {
       "label": "Verify: Quick checks (build + lint + unit test)",

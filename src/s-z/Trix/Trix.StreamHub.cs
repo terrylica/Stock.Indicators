@@ -19,6 +19,10 @@ public class TrixHub
         K = 2d / (lookbackPeriods + 1);
         Name = $"TRIX({lookbackPeriods})";
 
+        // Validate cache size for warmup requirements
+        // TRIX uses 3 chained EMAs; each requires lookbackPeriods for proper seeding.
+        ValidateCacheSize(lookbackPeriods * 3, Name);
+
         Reinitialize();
     }
 
