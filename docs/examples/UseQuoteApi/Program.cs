@@ -69,9 +69,9 @@ List<Quote> quotes = barSet
 // calculate 10-period SMA
 IEnumerable<SmaResult> results = quotes.ToSma(10);
 
-if (!results.Any() || results == null)
+if (results == null || !results.Any())
 {
-    throw new NullReferenceException("No indicator results were returned.");
+    throw new InvalidOperationException("No indicator results were returned.");
 }
 
 // show results
